@@ -5,7 +5,6 @@ import { colors } from "../styles";
 interface Props {
   id: number;
   task: string;
-  // index: number;
   onClickDelete: () => void;
 }
 
