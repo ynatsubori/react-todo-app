@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "@emotion/styled";
 import { colors } from "../styles";
 import { TaskList, TaskItem } from "../TaskList";
 import { TextInput } from "../TextInput";
+import { DndProvider } from "react-dnd";
+import Backend from "react-dnd-html5-backend";
+import update from "immutability-helper";
 
 const Background = styled.div`
   margin: 0 auto;
@@ -48,6 +51,21 @@ export const TaskLayout = () => {
     setTasks(filteredTask);
   };
 
+  const moveItem = useCallback(
+    (dragIndex: number, hoverIndex: number) => {
+      const dragCard = tasks[dragIndex];
+      setTasks(
+        update(tasks, {
+          $splice: [
+            [dragIndex, 1],
+            [hoverIndex, 0, dragCard],
+          ],
+        }),
+      );
+    },
+    [tasks],
+  );
+
   return (
     <>
       <Background>
@@ -60,18 +78,23 @@ export const TaskLayout = () => {
             }}
             value={addTask}
           />
-          <TaskList>
-            {tasks.map((task: string, i: number) => (
-              <TaskItem
-                key={i}
-                task={task}
-                id={i}
-                onClickDelete={() => {
-                  deleteTask(i);
-                }}
-              />
-            ))}
-          </TaskList>
+          <DndProvider backend={Backend}>
+            <TaskList>
+              {tasks.map((task: string, i: number) => (
+                <TaskItem
+                  key={i}
+                  task={task}
+                  index={i}
+                  onClickDelete={() => {
+                    deleteTask(i);
+                  }}
+                  moveItem={() => {
+                    moveItem;
+                  }}
+                />
+              ))}
+            </TaskList>
+          </DndProvider>
         </LayoutBase>
       </Background>
     </>
