@@ -1,3 +1,4 @@
 export { GlobalStyle } from "./GlobalStyle";
-export { Task } from "./Task";
+export { TextInput } from "./TextInput";
+export { TaskList, TaskItem } from "./TaskList";
 export { TaskLayout } from "./TaskLayout";

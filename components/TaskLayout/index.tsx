@@ -1,7 +1,8 @@
-import * as React from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { colors } from "../styles";
-import { Task } from "../Task";
+import { TaskList, TaskItem } from "../TaskList";
+import { TextInput } from "../TextInput";
 
 const Background = styled.div`
   margin: 0 auto;
@@ -30,12 +31,33 @@ const LayoutBase = styled.div`
 `;
 
 export const TaskLayout = () => {
+  const [addTask, setAddTask] = useState<string>("");
+  const [tasks, setTasks] = useState<string[]>([]);
+
+  const submitTask = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (addTask === "") return;
+    setTasks([...tasks, addTask]);
+    setAddTask(""); // 初期化
+  };
+
   return (
     <>
       <Background>
         <Heading>TODOList</Heading>
         <LayoutBase>
-          <Task />
+          <TextInput
+            onSubmit={submitTask}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setAddTask(e.target.value);
+            }}
+            value={addTask}
+          />
+          <TaskList>
+            {tasks.map((task: string, i: number) => (
+              <TaskItem key={i} task={task} id={i} />
+            ))}
+          </TaskList>
         </LayoutBase>
       </Background>
     </>
