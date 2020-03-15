@@ -41,6 +41,13 @@ export const TaskLayout = () => {
     setAddTask(""); // 初期化
   };
 
+  const deleteTask = (taskId: number) => {
+    const filteredTask = tasks.filter((_: string, index: number) => {
+      return index !== taskId;
+    });
+    setTasks(filteredTask);
+  };
+
   return (
     <>
       <Background>
@@ -55,7 +62,14 @@ export const TaskLayout = () => {
           />
           <TaskList>
             {tasks.map((task: string, i: number) => (
-              <TaskItem key={i} task={task} id={i} />
+              <TaskItem
+                key={i}
+                task={task}
+                id={i}
+                onClickDelete={() => {
+                  deleteTask(i);
+                }}
+              />
             ))}
           </TaskList>
         </LayoutBase>

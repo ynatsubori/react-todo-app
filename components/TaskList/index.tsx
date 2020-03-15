@@ -6,6 +6,7 @@ interface Props {
   id: number;
   task: string;
   // index: number;
+  onClickDelete: () => void;
 }
 
 export const TaskList = styled.ul`
@@ -46,6 +47,7 @@ const DeleteButton = styled.button`
   background-color: ${colors.white};
   border-radius: 4px;
   cursor: pointer;
+  outline: none;
   &:hover {
     color: ${colors.white};
     background-color: ${colors.secondary};
@@ -53,20 +55,19 @@ const DeleteButton = styled.button`
 `;
 
 export const TaskItem = (props: Props) => {
-  const [complete, setComplete] = useState(false);
-
+  const [completed, setCompleted] = useState(false);
   return (
     <>
-      <Item className={complete ? " complete" : ""} key={props.id}>
+      <Item className={completed ? " complete" : ""} key={props.id}>
         <TaskLabel>
           <CompleteButton
             type="checkbox"
-            checked={complete}
-            onChange={() => setComplete(!complete)}
+            checked={completed}
+            onChange={() => setCompleted(!completed)}
           />
           {props.task}
         </TaskLabel>
-        <DeleteButton>delete</DeleteButton>
+        <DeleteButton onClick={props.onClickDelete}>delete</DeleteButton>
       </Item>
     </>
   );

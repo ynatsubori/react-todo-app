@@ -35,6 +35,7 @@ const TaskInput = styled.input`
 
 const AddButton = styled.button`
   background-color: ${colors.secondary};
+  border: 1px solid ${colors.secondary};
   box-sizing: border-box;
   color: ${colors.white};
   cursor: pointer;
@@ -45,6 +46,7 @@ const AddButton = styled.button`
   height: 36px;
   &:hover {
     background-color: ${colors.secondaryDark};
+    border: 1px solid ${colors.secondaryDark};
   }
 `;
 
