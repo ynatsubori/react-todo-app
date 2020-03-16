@@ -53,12 +53,12 @@ export const TaskLayout = () => {
 
   const moveItem = useCallback(
     (dragIndex: number, hoverIndex: number) => {
-      const dragCard = tasks[dragIndex];
+      const dragItem = tasks[dragIndex];
       setTasks(
         update(tasks, {
           $splice: [
             [dragIndex, 1],
-            [hoverIndex, 0, dragCard],
+            [hoverIndex, 0, dragItem],
           ],
         }),
       );
@@ -82,15 +82,14 @@ export const TaskLayout = () => {
             <TaskList>
               {tasks.map((task: string, i: number) => (
                 <TaskItem
+                  id={i}
                   key={i}
                   task={task}
                   index={i}
                   onClickDelete={() => {
                     deleteTask(i);
                   }}
-                  moveItem={() => {
-                    moveItem;
-                  }}
+                  moveItem={moveItem}
                 />
               ))}
             </TaskList>

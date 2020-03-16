@@ -5,13 +5,14 @@ import { useDrag, useDrop, DropTargetMonitor, XYCoord } from "react-dnd";
 
 interface Props {
   index: number;
+  id: any;
   task: string;
   onClickDelete: () => void;
   moveItem: (dragIndex: number, hoverIndex: number) => void;
 }
 
 interface DragItem {
-  index: number;
+  itemIndex: number;
   id: number;
   type: string;
 }
@@ -65,13 +66,13 @@ const DeleteButton = styled.button`
 
 export const TaskItem = (props: Props) => {
   const [completed, setCompleted] = useState(false);
-  const labelRef = useRef<HTMLLabelElement>(null);
+  const liRef = useRef<HTMLLIElement>(null);
   const [, drop] = useDrop({
     accept: "task",
     hover(item: DragItem, monitor: DropTargetMonitor) {
-      const ref = labelRef.current;
+      const ref = liRef.current;
       if (!ref) return;
-      const dragIndex = item.index;
+      const dragIndex = item.itemIndex;
       const hoverIndex = props.index;
 
       if (dragIndex === hoverIndex) return;
@@ -83,34 +84,44 @@ export const TaskItem = (props: Props) => {
       if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return;
       if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return;
       props.moveItem(dragIndex, hoverIndex);
-      item.index = hoverIndex;
+      item.itemIndex = hoverIndex;
     },
   });
 
   const [{ isDragging }, drag] = useDrag({
-    item: { type: "task" },
+    item: { type: "task", id: props.id, index: props.index },
     collect: (monitor: any) => ({
       isDragging: monitor.isDragging(),
     }),
   });
-  const opacity = isDragging ? 0 : 1;
-  drag(drop(labelRef));
+  const itemOpacity = isDragging ? 0 : 1;
+  drag(drop(liRef));
 
   return (
     <>
       <Item
         className={completed ? " complete" : ""}
-        style={{ opacity: opacity }}
+        style={{ opacity: itemOpacity }}
         key={props.index}
+        ref={liRef}
       >
         <CompleteButton
           type="checkbox"
           checked={completed}
           onChange={() => setCompleted(!completed)}
         />
-        <TaskLabel ref={labelRef}>{props.task}</TaskLabel>
+        <TaskLabel>{props.task}</TaskLabel>
         <DeleteButton onClick={props.onClickDelete}>delete</DeleteButton>
       </Item>
+      {completed ? (
+        <>
+          <span role="img" aria-label="tada" style={{ fontSize: "60px" }}>
+            🎉
+          </span>
+        </>
+      ) : (
+        <></>
+      )}
     </>
   );
 };
