@@ -1,18 +1,23 @@
 import React, { useState, useRef } from "react";
 import styled from "@emotion/styled";
 import { colors } from "../styles";
-import { useDrag, useDrop, DropTargetMonitor, XYCoord } from "react-dnd";
+import {
+  useDrag,
+  useDrop,
+  DropTargetMonitor,
+  XYCoord,
+  DragSourceMonitor,
+} from "react-dnd";
 
 interface Props {
   index: number;
-  id: any;
   task: string;
   onClickDelete: () => void;
   moveItem: (dragIndex: number, hoverIndex: number) => void;
 }
 
 interface DragItem {
-  itemIndex: number;
+  index: number;
   id: number;
   type: string;
 }
@@ -67,14 +72,13 @@ const DeleteButton = styled.button`
 export const TaskItem = (props: Props) => {
   const [completed, setCompleted] = useState(false);
   const liRef = useRef<HTMLLIElement>(null);
+  const ref = liRef.current;
   const [, drop] = useDrop({
     accept: "task",
-    hover(item: DragItem, monitor: DropTargetMonitor) {
-      const ref = liRef.current;
+    drop(item: DragItem, monitor: DropTargetMonitor) {
       if (!ref) return;
-      const dragIndex = item.itemIndex;
+      const dragIndex = item.index;
       const hoverIndex = props.index;
-
       if (dragIndex === hoverIndex) return;
       const hoverBoundingRect = ref!.getBoundingClientRect();
       const hoverMiddleY =
@@ -84,24 +88,24 @@ export const TaskItem = (props: Props) => {
       if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return;
       if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return;
       props.moveItem(dragIndex, hoverIndex);
-      item.itemIndex = hoverIndex;
+      item.index = hoverIndex;
     },
   });
 
   const [{ isDragging }, drag] = useDrag({
-    item: { type: "task", id: props.id, index: props.index },
-    collect: (monitor: any) => ({
+    item: { type: "task", index: props.index },
+    collect: (monitor: DragSourceMonitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
-  const itemOpacity = isDragging ? 0 : 1;
+
   drag(drop(liRef));
 
   return (
     <>
       <Item
         className={completed ? " complete" : ""}
-        style={{ opacity: itemOpacity }}
+        style={{ opacity: isDragging ? 0 : 1 }}
         key={props.index}
         ref={liRef}
       >
@@ -113,15 +117,6 @@ export const TaskItem = (props: Props) => {
         <TaskLabel>{props.task}</TaskLabel>
         <DeleteButton onClick={props.onClickDelete}>delete</DeleteButton>
       </Item>
-      {completed ? (
-        <>
-          <span role="img" aria-label="tada" style={{ fontSize: "60px" }}>
-            🎉
-          </span>
-        </>
-      ) : (
-        <></>
-      )}
     </>
   );
 };

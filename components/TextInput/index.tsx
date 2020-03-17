@@ -1,11 +1,9 @@
-import * as React from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { colors } from "../styles";
 
 interface Props {
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: (e: React.MouseEvent) => void;
-  value: string;
+  onSubmit: (addTask: string) => void;
 }
 
 const TaskInput = styled.input`
@@ -51,15 +49,28 @@ const AddButton = styled.button`
 `;
 
 export const TextInput = (props: Props) => {
+  const [addTask, setAddTask] = useState<string>("");
+
   return (
     <>
       <TaskInput
         type="text"
         placeholder="please input task..."
-        onChange={props.onChange}
-        value={props.value}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          setAddTask(e.target.value);
+        }}
+        value={addTask}
       />
-      <AddButton onClick={props.onSubmit}>add</AddButton>
+      <AddButton
+        onClick={(e: React.MouseEvent) => {
+          e.preventDefault();
+          if (addTask === "") return;
+          props.onSubmit(addTask);
+          setAddTask("");
+        }}
+      >
+        add
+      </AddButton>
     </>
   );
 };

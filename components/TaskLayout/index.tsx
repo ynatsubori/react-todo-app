@@ -4,7 +4,7 @@ import { colors } from "../styles";
 import { TaskList, TaskItem } from "../TaskList";
 import { TextInput } from "../TextInput";
 import { DndProvider } from "react-dnd";
-import Backend from "react-dnd-html5-backend";
+import HTML5Backend from "react-dnd-html5-backend";
 import update from "immutability-helper";
 
 const Background = styled.div`
@@ -34,14 +34,10 @@ const LayoutBase = styled.div`
 `;
 
 export const TaskLayout = () => {
-  const [addTask, setAddTask] = useState<string>("");
   const [tasks, setTasks] = useState<string[]>([]);
 
-  const submitTask = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (addTask === "") return;
+  const submitTask = (addTask: string) => {
     setTasks([...tasks, addTask]);
-    setAddTask(""); // 初期化
   };
 
   const deleteTask = (taskId: number) => {
@@ -71,18 +67,11 @@ export const TaskLayout = () => {
       <Background>
         <Heading>TODOList</Heading>
         <LayoutBase>
-          <TextInput
-            onSubmit={submitTask}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setAddTask(e.target.value);
-            }}
-            value={addTask}
-          />
-          <DndProvider backend={Backend}>
+          <TextInput onSubmit={submitTask} />
+          <DndProvider backend={HTML5Backend}>
             <TaskList>
               {tasks.map((task: string, i: number) => (
                 <TaskItem
-                  id={i}
                   key={i}
                   task={task}
                   index={i}
