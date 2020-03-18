@@ -59,8 +59,7 @@ const UndoArea = styled.div`
 `;
 
 const UndoButton = styled.button`
-  margin: 0;
-  margin-right: 16px;
+  margin: 0 16px;
   padding: 4px 8px;
   border: 1px solid ${colors.accent};
   color: ${colors.accent};
@@ -77,15 +76,16 @@ const UndoButton = styled.button`
 
 type Task = {
   title: string;
-  completed: boolean;
+  deleted: boolean;
 };
 
 export const TaskLayout = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const prevTask = usePrevious(tasks);
+  const [deleted, setDeleted] = useState(false);
 
   const submitTask = (addTask: string) => {
-    const newTask = { title: addTask, completed: false };
+    const newTask = { title: addTask, deleted: false };
     const mergedTask = tasks.concat(newTask);
     setTasks(mergedTask);
   };
@@ -99,20 +99,7 @@ export const TaskLayout = () => {
 
   const undoTask = () => {
     if (prevTask === undefined || prevTask.length <= 0) return;
-    return (
-      <>
-        <UndoArea>
-          <UndoButton
-            onClick={() => {
-              if (prevTask === undefined) return;
-              setTasks(prevTask);
-            }}
-          >
-            undo
-          </UndoButton>
-        </UndoArea>
-      </>
-    );
+    setTasks(prevTask);
   };
 
   const moveItem = useCallback(
@@ -146,12 +133,25 @@ export const TaskLayout = () => {
                     index={i}
                     onClickDelete={() => {
                       deleteTask(i);
+                      setDeleted(true);
                     }}
                     moveItem={moveItem}
                   />
                 </React.Fragment>
               ))}
-              {undoTask()}
+              {deleted ? (
+                <UndoArea>
+                  <UndoButton
+                    onClick={() => {
+                      undoTask();
+                    }}
+                  >
+                    undo
+                  </UndoButton>
+                </UndoArea>
+              ) : (
+                <></>
+              )}
             </TaskList>
           </DndProvider>
         </LayoutBase>
