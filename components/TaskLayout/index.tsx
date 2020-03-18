@@ -57,23 +57,6 @@ const UndoArea = styled.div`
   background-color: ${colors.background};
   animation: ${undoAnim} 1s ease-in 1;
 `;
-//   &::before {
-//     position: absolute;
-//     content: "";
-//     top: 100%;
-//     left: 0;
-//     border: none;
-//     border-bottom: solid 5px transparent;
-//     border-right: solid 5px ${colors.accentDark};
-//   }
-//   &:after {
-//     position: absolute;
-//     content: "";
-//     top: 100%;
-//     right: 0;
-//     border: none;
-//     border-bottom: solid 5px transparent;
-//     border-left: solid 5px ${colors.accentDark};
 
 const UndoButton = styled.button`
   margin: 0;
