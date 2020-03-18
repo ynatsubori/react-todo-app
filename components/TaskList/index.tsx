@@ -36,7 +36,7 @@ const Item = styled.li`
   font-size: 1.6rem;
   color: ${colors.primary};
   word-break: break-all;
-  &.complete {
+  &.completed {
     text-decoration-line: line-through;
   }
 `;
@@ -104,7 +104,7 @@ export const TaskItem = (props: Props) => {
   return (
     <>
       <Item
-        className={completed ? " complete" : ""}
+        className={completed ? " completed" : ""}
         style={{ opacity: isDragging ? 0 : 1 }}
         key={props.index}
         ref={liRef}
@@ -112,10 +112,14 @@ export const TaskItem = (props: Props) => {
         <CompleteButton
           type="checkbox"
           checked={completed}
-          onChange={() => setCompleted(!completed)}
+          onChange={() => {
+            setCompleted(!completed);
+          }}
         />
         <TaskLabel>{props.task}</TaskLabel>
-        <DeleteButton onClick={props.onClickDelete}>delete</DeleteButton>
+        <DeleteButton onClick={() => props.onClickDelete()}>
+          delete
+        </DeleteButton>
       </Item>
     </>
   );
