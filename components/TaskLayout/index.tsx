@@ -131,7 +131,7 @@ export const TaskLayout = () => {
                     key={i}
                     task={task.title}
                     index={i}
-                    onClickDelete={() => {
+                    onDelete={() => {
                       deleteTask(i);
                       setDeleted(true);
                     }}

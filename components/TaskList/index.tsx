@@ -12,7 +12,7 @@ import {
 interface Props {
   index: number;
   task: string;
-  onClickDelete: () => void;
+  onDelete: () => void;
   moveItem: (dragIndex: number, hoverIndex: number) => void;
 }
 
@@ -117,9 +117,7 @@ export const TaskItem = (props: Props) => {
           }}
         />
         <TaskLabel>{props.task}</TaskLabel>
-        <DeleteButton onClick={() => props.onClickDelete()}>
-          delete
-        </DeleteButton>
+        <DeleteButton onClick={() => props.onDelete()}>delete</DeleteButton>
       </Item>
     </>
   );
