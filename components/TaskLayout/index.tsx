@@ -5,7 +5,7 @@ import { colors } from "../styles";
 import { TaskList, TaskItem } from "../TaskList";
 import { TextInput } from "../TextInput";
 import { DndProvider } from "react-dnd";
-import HTML5Backend from "react-dnd-html5-backend";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import update from "immutability-helper";
 import { usePrevious } from "react-use";
 
